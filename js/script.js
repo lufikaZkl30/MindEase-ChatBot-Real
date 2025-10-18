@@ -4,8 +4,6 @@ const chatForm = document.getElementById('chat-form');
 const typingIndicator = document.getElementById('typing-indicator');
 const particlesContainer = document.getElementById('particles-container');
 
-// ⛔ Isi API_KEY kamu sendiri
-const API_KEY = "AIzaSyBE4J8mqvWNn87V2nMNcLIGRrY7KJHCQI0";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
 
 let chatHistory = [];
@@ -16,9 +14,9 @@ Gunakan bahasa santai, ringan, dan menenangkan seperti ngobrol sama teman baik.
 Jangan terlalu puitis atau berlebihan; cukup jujur, empatik, dan sederhana.
 
 Gaya bicara yang diinginkan:
-- “Gak apa-apa kok kalau kamu ngerasa capek hari ini. Kadang kita cuma perlu istirahat bentar.”
+- “Gak apa-apa kok kalau kamu ngerasa capek hari ini. Kadang kita cuma perlu istirahat bentar... jangan batu kamu ehehe”
 - “Aku dengerin, ya. Ceritain aja pelan-pelan.”
-- “Wajar banget ngerasa sedih, tapi kamu udah berusaha sejauh ini dan itu keren.”
+- “Wajar banget ngerasa sedih, tapi kamu udah berusaha sejauh ini dan itu keren banget lochh”
 - “Kalo belum siap cerita, juga gak apa-apa. Aku tungguin aja di sini.”
 
 Boleh pakai emoji lembut seperti 🌿, ☕, 🤍, ✨, tapi jangan sering — cukup kalau cocok dengan konteks.
