@@ -58,6 +58,7 @@ Kalau pengguna bercerita, tanggapi dengan empati dan pertanyaan ringan.
     });
 
     const data = await res.json();
+    // balasan dari response API yg belum terhubung
     const reply =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
       "Aku di sini dengerin kamu 🤍";
