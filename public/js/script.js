@@ -5,7 +5,6 @@ const typingIndicator = document.getElementById("typing-indicator");
 
 let chatHistory = [];
 
-// gaya pembuka
 window.onload = () => {
   addMessage(
     "Selamat datang di Ruang Cerita Jiwa 🌿 Tarik napas perlahan... Aku di sini buat dengerin hatimu 🤍",
@@ -13,7 +12,6 @@ window.onload = () => {
   );
 };
 
-// tampilkan pesan
 function addMessage(text, sender) {
   const div = document.createElement("div");
   div.className = sender === "user" ? "text-right" : "text-left";
@@ -35,21 +33,23 @@ chatForm.addEventListener("submit", async (e) => {
   userInput.value = "";
   typingIndicator.style.display = "block";
 
+  // simpan ke riwayat chat biar nyambung
+  chatHistory.push({ role: "user", parts: [{ text: msg }] });
+
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [
-          { role: "user", parts: [{ text: msg }] },
-        ],
+        contents: chatHistory,
         systemInstruction: {
           parts: [
             {
               text: `
-Kamu adalah MindEase (Mindy) — teman curhat digital yang hangat, ringan, dan tenang.
-Gunakan bahasa santai seperti ngobrol sama teman, lembut tapi jujur.
-Fokusnya bikin pengguna ngerasa nyaman, diterima, dan gak dihakimi.
+Kamu adalah MindEase (Mindy) — teman curhat digital yang lembut, suportif, dan tidak menghakimi.
+Gunakan bahasa santai seperti ngobrol sama teman. 
+Bantu pengguna mengenali perasaan mereka dengan lembut.
+Kalau pengguna bercerita, tanggapi dengan empati dan pertanyaan ringan.
               `,
             },
           ],
@@ -62,7 +62,10 @@ Fokusnya bikin pengguna ngerasa nyaman, diterima, dan gak dihakimi.
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
       "Aku di sini dengerin kamu 🤍";
 
+    // tampilkan dan simpan ke riwayat
     addMessage(reply, "bot");
+    chatHistory.push({ role: "model", parts: [{ text: reply }] });
+
   } catch (err) {
     console.error(err);
     addMessage("Maaf, MindEase lagi lelah dikit... coba lagi ya 🌿", "bot");
