@@ -3,8 +3,11 @@ const userInput = document.getElementById('user-input');
 const chatForm = document.getElementById('chat-form');
 const typingIndicator = document.getElementById('typing-indicator');
 const particlesContainer = document.getElementById('particles-container');
+import 'dotenv/config';
 
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+const apiKey = process.env.API_KEY; // ambil dari file .env
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+console.log(apiKey);
 
 let chatHistory = [];
 
