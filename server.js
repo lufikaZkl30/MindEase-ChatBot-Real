@@ -4,6 +4,8 @@ import express from "express";
 import fetch from "node-fetch";
 import path from "path";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+dotenv.config();
 
 // ====== Setup path ======
 const __filename = fileURLToPath(import.meta.url);
