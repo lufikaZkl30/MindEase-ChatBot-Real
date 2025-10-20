@@ -1,56 +1,33 @@
-const chatForm = document.getElementById("chat-form");
-const userInput = document.getElementById("user-input");
-const chatBox = document.getElementById("chat-box");
-const typingIndicator = document.getElementById("typing-indicator");
+// Script Tambahan - efek & animasi visual (tanpa logika chat)
 
-// fungsi buat nambah pesan ke chat box
-function addMessage(sender, text) {
-  const messageDiv = document.createElement("div");
-  messageDiv.classList.add("message", sender);
-  messageDiv.textContent = text;
-  chatBox.appendChild(messageDiv);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
+// Animasi background partikel halus
+document.addEventListener("DOMContentLoaded", () => {
+  const particlesContainer = document.getElementById("particles-container");
+  if (!particlesContainer) return;
 
-// event ketika user kirim pesan
-chatForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const userText = userInput.value.trim();
-  if (!userText) return;
-
-  addMessage("user", userText);
-  userInput.value = "";
-
-  typingIndicator.style.display = "block";
-
-  try {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: userText }]
-          }
-        ]
-      }),
-    });
-
-    const data = await res.json();
-    console.log("Response:", data);
-
-    // ambil teks dari hasil response Gemini
-    const botReply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "Maaf, aku belum bisa jawab itu 😅";
-
-    addMessage("bot", botReply);
-  } catch (error) {
-    console.error("Error:", error);
-    addMessage("bot", "❌ Terjadi kesalahan saat menghubungi server.");
-  } finally {
-    typingIndicator.style.display = "none";
+  const count = 20;
+  for (let i = 0; i < count; i++) {
+    const particle = document.createElement("div");
+    particle.className = "particle";
+    const size = Math.random() * 5 + 1;
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    particle.style.left = `${Math.random() * 100}%`;
+    particle.style.bottom = "0";
+    particle.style.animationDuration = `${Math.random() * 15 + 10}s`;
+    particle.style.animationDelay = `${Math.random() * 10}s`;
+    particlesContainer.appendChild(particle);
   }
 });
+
+// Tambahan animasi untuk tombol kirim ✨
+const sendButton = document.querySelector("button[type='submit']");
+if (sendButton) {
+  sendButton.addEventListener("mouseenter", () => {
+    sendButton.style.transform = "scale(1.1)";
+    sendButton.style.transition = "transform 0.2s ease";
+  });
+  sendButton.addEventListener("mouseleave", () => {
+    sendButton.style.transform = "scale(1)";
+  });
+}
