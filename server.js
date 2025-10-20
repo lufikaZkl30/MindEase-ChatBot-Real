@@ -25,8 +25,9 @@ app.post("/chat", async (req, res) => {
   try {
     const userMessage = req.body.message;
 
+    // Call Gemini API 2.5 Flash
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
