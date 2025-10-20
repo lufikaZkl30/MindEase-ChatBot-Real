@@ -1,4 +1,4 @@
-// Script Tambahan - efek & animasi visual (tanpa logika chat)
+// Script fix Tambahan - efek & animasi visual (tanpa logika chat)
 
 // Animasi background partikel halus
 document.addEventListener("DOMContentLoaded", () => {
@@ -31,3 +31,20 @@ if (sendButton) {
     sendButton.style.transform = "scale(1)";
   });
 }
+
+// --- gelembung lembut di background ---
+function createBubbles() {
+  const body = document.body;
+  for (let i = 0; i < 20; i++) {
+    const bubble = document.createElement("div");
+    bubble.classList.add("bubble");
+    const size = Math.random() * 20 + 10;
+    bubble.style.width = `${size}px`;
+    bubble.style.height = `${size}px`;
+    bubble.style.left = `${Math.random() * 100}%`;
+    bubble.style.animationDuration = `${10 + Math.random() * 10}s`;
+    bubble.style.animationDelay = `${Math.random() * 5}s`;
+    body.appendChild(bubble);
+  }
+}
+window.onload = createBubbles;

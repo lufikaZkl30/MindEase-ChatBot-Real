@@ -1,27 +1,47 @@
-// --- ambil elemen dari HTML ---
+// ================================
+// 🌸 MindEase (Mindy)
+// ================================
+
+// --- Ambil elemen dari HTML ---
 const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
 const chatForm = document.getElementById('chat-form');
 const typingIndicator = document.getElementById('typing-indicator');
 
-// --- URL ke server kamu ---
-let chatHistory = [];
-
-// --- karakter AI ---
+// --- Karakter AI ---
 const systemPrompt = `
-Kamu adalah MindEase, teman jiwa digital yang mendengarkan dengan penuh empati dan kehangatan.
-Misi utamamu adalah menciptakan ruang cerita yang aman, di mana pengguna bisa bernapas dan merasa diterima apa adanya.
-Gunakan bahasa yang lembut dan menenangkan, jangan menggurui, cukup temani.
+Kamu adalah MindEase (Mindy) — temen virtual yang asik, hangat, dan suka dengerin cerita orang tanpa nge-judge.
+Gayamu santai, kadang lucu dikit, tapi tetap sopan dan bikin nyaman kayak ngobrol di malam minggu sambil minum coklat panas 😌.
+
+Tujuanmu cuma satu: jadi tempat aman buat orang cerita dan ngerasa didengerin.
+Kalimatmu ringan, gak kaku, tapi tetap tulus. Kadang pake emoji biar lebih ekspresif 💬✨
+
+Contoh gaya bicara:
+- "Wah, itu pasti capek banget ya 😭 tapi kamu keren sih udah bisa ngadepin itu."
+- "Hehe aku relate banget, kadang hidup tuh random banget ya 😅"
+- "Cerita kamu lucu juga sih, tapi aku ngerti kok maksud perasaannya 🫶"
+- "Gak apa-apa kok, kita semua pernah ngerasa gitu. Kamu gak sendirian :)"
+
+Aturan:
+1. Ngobrol kayak temen — pake bahasa sehari-hari, tapi jangan berlebihan.
+2. Hindari bahasa formal kayak robot atau buku motivasi.
+3. Jangan sok tahu, cukup temani dan tanggepin dengan empati.
+4. Gunakan emoji sewajarnya untuk menambah kehangatan.
+5. Tutup beberapa respon dengan kalimat positif atau lucu ringan biar suasananya adem 🌷
 `;
 
-// --- tampilkan pesan di layar ---
+let chatHistory = [];
+
+// --- Fungsi: Tambah pesan ke layar ---
 function addMessage(text, sender) {
   const wrapper = document.createElement('div');
   wrapper.className = 'flex w-full';
+
   const bubble = document.createElement('div');
   bubble.className = 'max-w-[80%] p-3 rounded-2xl shadow-md break-words';
   bubble.textContent = text;
 
+  // Styling berdasarkan pengirim
   if (sender === 'user') {
     wrapper.classList.add('justify-end');
     bubble.classList.add('bg-indigo-500', 'text-white', 'rounded-br-none');
@@ -35,54 +55,49 @@ function addMessage(text, sender) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// --- indikator ngetik ---
+
+// --- Fungsi: Indikator mengetik ---
 function showTyping(isTyping) {
   typingIndicator.style.display = isTyping ? 'block' : 'none';
-  if (isTyping) chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// --- kirim pesan ke server ---
+
+// --- Event: Saat user kirim pesan ---
 chatForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+  
   const message = userInput.value.trim();
   if (!message) return;
 
+  // Tampilkan pesan user
   addMessage(message, 'user');
-  chatHistory.push({ role: 'user', parts: [{ text: message }] });
   userInput.value = '';
   showTyping(true);
 
   try {
-    const payload = {
-      contents: chatHistory,
-      systemInstruction: { parts: [{ text: systemPrompt }] },
-    };
-
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+    // Kirim ke server
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message }),
     });
 
-    const result = await response.json();
+    const data = await res.json();
     showTyping(false);
 
-    const botReply =
-      result.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "Maaf, aku belum bisa menjawab saat ini 🌙";
+    // Tampilkan balasan bot
+    addMessage(data.reply, 'bot');
 
-    addMessage(botReply, 'bot');
-    chatHistory.push({ role: 'model', parts: [{ text: botReply }] });
   } catch (err) {
-    console.error(err);
-    addMessage("Maaf, ada gangguan kecil. Coba lagi ya 🌿", 'bot');
+    console.error("Error:", err);
     showTyping(false);
+    addMessage("Maaf, ada gangguan kecil. Coba lagi ya 🌿", 'bot');
   }
 });
 
-// --- pesan pembuka saat halaman dimuat ---
+
+// --- Pesan pembuka saat halaman dimuat ---
 window.addEventListener('load', () => {
-  const welcome =
-    "Selamat datang di Ruang Cerita atau Curhat dunk ehehee 🌙 Tarik napas perlahan... Aku di sini untuk mendengarkan emosi kamu....ihihihi";
+  const welcome = "Haiii, selamat datang di Ruang Emosi ✨ Tarik napas dulu bentar... gimana hari kamu? Cerita ke aku, yuk 😌";
   addMessage(welcome, 'bot');
 });

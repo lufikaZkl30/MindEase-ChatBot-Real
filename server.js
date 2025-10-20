@@ -1,3 +1,4 @@
+// fix code server.js to use Gemini API 2.5 Pro instead of Gemini 1.5
 import express from "express";
 import fetch from "node-fetch";
 import path from "path";

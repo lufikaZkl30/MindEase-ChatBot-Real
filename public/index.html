@@ -19,45 +19,38 @@
       <!-- Header -->
       <div class="p-5 text-center border-b border-black/10">
         <h1 class="text-2xl font-bold text-gray-800">MindEase</h1>
-        <p class="text-sm text-gray-600">Ruang Cerita Jiwa</p>
+        <p class="text-sm text-gray-600">Ruang Emosi</p>
       </div>
 
       <!-- Chat Box -->
       <div id="chat-box" class="flex-grow overflow-y-auto"></div>
-      <script src="/public/js/chat.js"></script>
+      <!-- <script src="/public/js/chat.js"></script> -->
 
       <!-- Typing Indicator -->
-      <div id="typing-indicator" class="hidden px-6 pb-2">
-        <div class="inline-block bg-gray-200/80 backdrop-blur-sm rounded-full rounded-bl-none p-3">
-          <div class="flex items-center space-x-1">
-            <div class="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-            <div class="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-100"></div>
-            <div class="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-200"></div>
-          </div>
-        </div>
+     <div id="typing-indicator" class="hidden px-4 py-2">
+      <div class="flex space-x-1">
+        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></div>
+        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></div>
       </div>
+     </div>
+
 
       <!-- Input Form -->
       <form id="chat-form">
-        <input id="user-input" type="text" placeholder="Ceritakan apa yang hatimu rasakan hari ini…" />
+        <input id="user-input" type="text" placeholder="Ketik disini..." />
         <button type="submit">✨</button>
       </form>
     </div>
 
-    <div class="absolute bottom-4 right-4 text-black/20 opacity-50 pointer-events-none text-xs">
-      crafted with calm souls by <b>lufikaZkl30 🌿</b>
+    <div class="fixed bottom-3 right-5 text-gray-500/70 text-xs tracking-wide">
+      crafted with calm souls by <b class="text-gray-700">lufikaZkl30 🌿</b>
     </div>
   </div>
 
-  <div class="signature">
-    crafted with calm souls by <strong>lufikaZkl30</strong> 🌿
-  </div>
-
-<!-- Efek visual -->
-<script src="/public/js/script.js"></script>
-
-<!-- Logika chatbot -->
-<script src="/public/js/chat.js"></script>
+  
+<script src="/js/script.js"></script>
+<script src="/js/chat.js"></script>
 
 </body>
 </html>

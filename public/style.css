@@ -1,22 +1,36 @@
 body {
   font-family: 'Quicksand', sans-serif;
-  background: linear-gradient(to right, #dbeafe, #fef3c7);
+  background: linear-gradient(-45deg, #e0c3fc, #8ec5fc, #fbe2e3, #d2f7f1);
+  background-size: 400% 400%;
+  animation: gradientBG 12s ease infinite;
   height: 100vh;
   margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Chat wrapper */
 .chat-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
   max-width: 600px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-/* --- Chat Layout --- */
+/* Chat box */
 #chat-box {
   display: flex;
   flex-direction: column;
@@ -30,36 +44,44 @@ body {
 /* Bubble umum */
 .message {
   max-width: 70%;
-  padding: 10px 16px;
-  border-radius: 16px;
+  padding: 12px 18px;
+  border-radius: 20px;
   word-wrap: break-word;
-  animation: fadeIn 0.3s ease-in-out;
+  animation: floatIn 0.4s ease-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Bubble dari bot */
+/* Efek “awan terbang” */
+.message:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Bubble bot */
 .bot-message {
   align-self: flex-start;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.9);
   color: #333;
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-bottom-left-radius: 4px;
-  backdrop-filter: blur(10px);
+  box-shadow: 0 3px 8px rgba(150, 150, 150, 0.15);
 }
 
-/* Bubble dari user */
+/* Bubble user */
 .user-message {
   align-self: flex-end;
-  background: linear-gradient(to right, #8b5cf6, #6366f1);
+  background: linear-gradient(to right, #a78bfa, #6366f1);
   color: white;
   border-bottom-right-radius: 4px;
+  box-shadow: 0 3px 8px rgba(99, 102, 241, 0.3);
 }
 
-/* Input box */
+/* Input area */
 #chat-form {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px;
+  padding: 12px;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -68,18 +90,18 @@ body {
   padding: 10px 16px;
   border-radius: 50px;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.7);
   color: #333;
   outline: none;
 }
 
 #user-input::placeholder {
-  color: #aaa;
+  color: #999;
 }
 
 button[type="submit"] {
   border: none;
-  background: #fff;
+  background: white;
   color: #444;
   border-radius: 50%;
   padding: 10px 13px;
@@ -87,24 +109,62 @@ button[type="submit"] {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 button[type="submit"]:hover {
   transform: scale(1.1);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 /* Animasi */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes floatIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.25s ease-out;
+/* Indicator bounce */
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+.animate-bounce {
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+/* credit text pojok kanan bawah */
+.credit {
+  position: fixed;
+  bottom: 10px;
+  right: 20px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.4);
+  animation: fadeIn 1s ease-in-out;
+}
+.credit b {
+  color: rgba(0, 0, 0, 0.6);
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* --- background bubbles lembut --- */
+.bubble {
+  position: absolute;
+  bottom: -50px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: rise 10s linear infinite;
+  pointer-events: none;
+  filter: blur(2px);
+}
+
+@keyframes rise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-100vh) scale(1.5);
+    opacity: 0;
+  }
 }
