@@ -29,10 +29,48 @@ document.getElementById("chat-form").addEventListener("submit", async (e) => {
 function addMessage(sender, text) {
   const chatBox = document.getElementById("chat-box");
   const div = document.createElement("div");
-  div.className = sender === "user" ? "user-message" : "bot-message";
   div.textContent = text;
+  div.classList.add("flex"); // buat posisi bubble
+
+  // gaya bubble user/bot
+  styleMessageBubble(div, sender);
+
   chatBox.appendChild(div);
   chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Tambahkan gaya bubble sesuai pengirim
+function styleMessageBubble(div, sender) {
+  div.classList.add(
+    "max-w-[75%]",
+    "p-3",
+    "rounded-2xl",
+    "shadow-sm",
+    "break-words",
+    "mb-2",
+    "animate-fadeIn"
+  );
+
+  if (sender === "user") {
+    div.classList.add(
+      "bg-gradient-to-r",
+      "from-indigo-500",
+      "to-purple-500",
+      "text-white",
+      "self-end",
+      "rounded-br-none"
+    );
+  } else {
+    div.classList.add(
+      "bg-white/70",
+      "text-gray-800",
+      "self-start",
+      "rounded-bl-none",
+      "backdrop-blur-md",
+      "border",
+      "border-gray-200"
+    );
+  }
 }
 
 function addTypingIndicator(show) {
