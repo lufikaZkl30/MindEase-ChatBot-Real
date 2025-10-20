@@ -13,25 +13,39 @@
   <!-- External CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div id="particles-container"></div>
-
-  <div class="chat-wrapper">
-    <div class="chat-box">
-      <div class="header">
-        <h1>MindEase</h1>
-        <p>Ruang Cerita Jiwa</p>
+<body class="flex items-center justify-center min-h-screen  overflow-hidden">
+  <div class="w-full max-w-lg mx-4 bg-transparent rounded-3xl flex flex-col h-[95vh] max-h-[800px] relative">
+    <div class="glassmorphism w-full h-full rounded-3xl shadow-lg flex flex-col">
+      <!-- Header -->
+      <div class="p-5 text-center border-b border-black/10">
+        <h1 class="text-2xl font-bold text-gray-800">MindEase</h1>
+        <p class="text-sm text-gray-600">Ruang Cerita Jiwa</p>
       </div>
 
-      <div id="chat-box" class="chat-content"></div>
+      <!-- Chat Box -->
+      <div id="chat-box" class="flex-grow overflow-y-auto"></div>
+      <script src="/public/js/chat.js"></script>
 
-      <div id="typing-indicator" style="display:none;">...</div>
-      
-      //form input
+      <!-- Typing Indicator -->
+      <div id="typing-indicator" class="hidden px-6 pb-2">
+        <div class="inline-block bg-gray-200/80 backdrop-blur-sm rounded-full rounded-bl-none p-3">
+          <div class="flex items-center space-x-1">
+            <div class="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+            <div class="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-100"></div>
+            <div class="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-200"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Form -->
       <form id="chat-form">
-        <input id="user-input" type="text" placeholder="Ceritakan apa aja di pikiranmu xixixi...." required>
+        <input id="user-input" type="text" placeholder="Ceritakan apa yang hatimu rasakan hari ini…" />
         <button type="submit">✨</button>
       </form>
+    </div>
+
+    <div class="absolute bottom-4 right-4 text-black/20 opacity-50 pointer-events-none text-xs">
+      crafted with calm souls by <b>lufikaZkl30 🌿</b>
     </div>
   </div>
 
@@ -39,6 +53,6 @@
     crafted with calm souls by <strong>lufikaZkl30</strong> 🌿
   </div>
 
-  <script src="js/script.js"></script>
+  <script src="/public/js/script.js"></script>
 </body>
 </html>
