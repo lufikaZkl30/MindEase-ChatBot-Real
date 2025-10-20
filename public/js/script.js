@@ -26,15 +26,12 @@ document.getElementById("chat-form").addEventListener("submit", async (e) => {
   }
 });
 
+// Fungsi untuk menambahkan pesan ke kotak obrolan
 function addMessage(sender, text) {
   const chatBox = document.getElementById("chat-box");
   const div = document.createElement("div");
   div.textContent = text;
-  div.classList.add("flex"); // buat posisi bubble
-
-  // gaya bubble user/bot
-  styleMessageBubble(div, sender);
-
+  div.classList.add("message", sender === "user" ? "user-message" : "bot-message");
   chatBox.appendChild(div);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
