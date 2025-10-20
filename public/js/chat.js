@@ -38,10 +38,17 @@ function addMessage(text, sender) {
   wrapper.className = 'flex w-full';
 
   const bubble = document.createElement('div');
-  bubble.className = 'max-w-[80%] p-3 rounded-2xl shadow-md break-words';
-  bubble.textContent = text;
+  bubble.className = 'max-w-[80%] p-3 rounded-2xl shadow-md break-words leading-relaxed';
 
-  // Styling berdasarkan pengirim
+  // 🔥 konversi markdown + line breaks biar rapi
+  let formattedText = text
+    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')      // **bold**
+    .replace(/\*(.*?)\*/g, '<i>$1</i>')          // *italic*
+    .replace(/\n\s*\n/g, '<br><br>')             // spasi antar paragraf
+    .replace(/\n/g, '<br>');                     // baris baru
+
+  bubble.innerHTML = formattedText;
+
   if (sender === 'user') {
     wrapper.classList.add('justify-end');
     bubble.classList.add('bg-indigo-500', 'text-white', 'rounded-br-none');
