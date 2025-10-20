@@ -1,45 +1,49 @@
-// fix code server.js to use Gemini API 2.5 Pro instead of Gemini 1.5
+// --- Import dependencies ---
 import express from "express";
 import fetch from "node-fetch";
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 
-// Load environment variables from .env file
+// --- Load environment variables ---
 dotenv.config();
 
-// Verify that the API key is loaded
+// --- Cek API Key ---
 console.log("API Key Loaded:", process.env.GEMINI_API_KEY ? "✅ YES" : "❌ NO");
 
-// Initialize Express app
+// --- Setup dasar server ---
 const app = express();
 const PORT = process.env.PORT || 3000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
+// --- Path setup untuk folder public ---
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 
+// --- Endpoint utama untuk chat ---
 app.post("/chat", async (req, res) => {
   try {
     const userMessage = req.body.message;
+    const systemPrompt = req.body.systemPrompt || ""; // karakter / personality AI dikirim dari client
 
-    // Call Gemini API 2.5 Pro
+    // --- Panggil Gemini API 2.5 Flash ---
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: userMessage }] }],
+          system_instruction: { parts: [{ text: systemPrompt }] },
+          contents: [{ role: "user", parts: [{ text: userMessage }] }],
         }),
       }
     );
 
+    // --- Parsing respon ---
     const data = await response.json();
-
     const aiText =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
       "Maaf, aku belum bisa jawab itu 🥺";
@@ -51,4 +55,7 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+// --- Jalankan server ---
+app.listen(PORT, () =>
+  console.log(`🚀 Server running on http://localhost:${PORT}`)
+);

@@ -55,7 +55,6 @@ function addMessage(text, sender) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-
 // --- Fungsi: Indikator mengetik ---
 function showTyping(isTyping) {
   typingIndicator.style.display = isTyping ? 'block' : 'none';
@@ -77,10 +76,10 @@ chatForm.addEventListener('submit', async (e) => {
   try {
     // Kirim ke server
     const res = await fetch("/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
-    });
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message, systemPrompt }),
+  });
 
     const data = await res.json();
     showTyping(false);
@@ -95,9 +94,8 @@ chatForm.addEventListener('submit', async (e) => {
   }
 });
 
-
 // --- Pesan pembuka saat halaman dimuat ---
 window.addEventListener('load', () => {
-  const welcome = "Haiii, selamat datang di Ruang Emosi ✨ Tarik napas dulu bentar... gimana hari kamu? Cerita ke aku, yuk 😌";
+  const welcome = "Haiii, selamat datang di cerita dunkkk eak ✨ Tarik napas dulu bentar... gimana hari kamu? Cerita ke aku, yuk 😌";
   addMessage(welcome, 'bot');
 });
