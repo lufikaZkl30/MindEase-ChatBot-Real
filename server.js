@@ -1,59 +1,52 @@
-// ====== Import Package ======
 import express from "express";
 import fetch from "node-fetch";
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 
-// ====== Load Environment (.env) ======
+// Load environment variables from .env file
 dotenv.config();
 
-// Debugging: cek posisi & isi environment
-console.log("📁 Current working dir:", process.cwd());
-console.log("🔍 Looking for .env at:", path.join(process.cwd(), ".env"));
-console.log("📄 dotenv path:", path.resolve(".env"));
-console.log("🧩 env keys:", Object.keys(process.env));
-console.log("🔑 API KEY:", process.env.API_KEY ? "✅ Loaded" : "❌ Not Loaded");
-console.log("🌐 PORT:", process.env.PORT || 3000);
+// Verify that the API key is loaded
+console.log("API Key Loaded:", process.env.GEMINI_API_KEY ? "✅ YES" : "❌ NO");
 
-// ====== Path Setup ======
+// Initialize Express app
+const app = express();
+const PORT = process.env.PORT || 3000;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ====== Setup Express ======
-const app = express();
-const PORT = process.env.PORT || 3000;
-
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public"))); // serve file dari folder public
 
-// ====== API Proxy ke Gemini ======
-app.post("/api/chat", async (req, res) => {
+app.post("/chat", async (req, res) => {
   try {
-    const apiKey = process.env.API_KEY;
-    if (!apiKey) {
-      console.error("❌ API Key not found in .env!");
-      return res.status(500).json({ error: "API Key missing on server" });
-    }
+    const userMessage = req.body.message;
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(req.body),
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: userMessage }] }],
+        }),
       }
     );
 
     const data = await response.json();
-    res.json(data);
-  } catch (err) {
-    console.error("❌ Error from Gemini API:", err);
-    res.status(500).json({ error: "Server error calling Gemini API" });
+
+    const aiText =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "Maaf, aku belum bisa jawab itu 🥺";
+
+    res.json({ reply: aiText });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ reply: "Terjadi kesalahan di server 😢" });
   }
 });
 
-// ====== Jalankan Server ======
-app.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
