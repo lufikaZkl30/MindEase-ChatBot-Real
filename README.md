@@ -56,7 +56,6 @@ Dia tidak memberi nasihat teknis, hanya menemani dan membuatmu merasa diterima a
 ## Lisensi 
 
 Proyek ini dibuat untuk tujuan edukasi dan pengembangan personal.
-Silakan gunakan, modifikasi, atau kembangkan lebih lanjut dengan tetap menjaga semangat MindEase:
-
+Silakan gunakan, modifikasi, atau kembangkan lebih lanjut dengan tetap menjaga semangat MindEase...
 menciptakan ruang aman untuk setiap orang yang ingin bercerita. 💜
    
