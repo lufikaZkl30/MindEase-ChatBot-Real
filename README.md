@@ -1,6 +1,6 @@
 # 🌿 MindEase — Ruang Cerita Bersama Mindy
 
-> “Tarik napas perlahan... di sini kamu bisa cerita tanpa takut dihakimi.”  
+> “Tarik napas perlahan... di sini kamu bisa cerita tanpa takut dihakimi yaaww”  
 
 MindEase adalah chatbot berbasis **AI (Gemini 2.5 Flash)** yang diciptakan sebagai **ruang curhat digital**.  
 Ia mendengarkan dengan lembut, membalas dengan empati, dan menemanimu lewat percakapan ringan — layaknya seorang teman jiwa yang hadir saat kamu butuh tempat bercerita.  
