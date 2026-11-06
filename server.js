@@ -12,16 +12,11 @@ import dotenv from "dotenv";
 // --- Load environment variables ---
 dotenv.config();
 
-// --- Cek API Key ---
-console.log(
-  "API Key Loaded:",
-  process.env.GEMINI_API_KEY ? "✅ YES" : "❌ NO"
-);
-
 // --- Setup dasar server ---
 const app = express();
 const PORT = process.env.PORT || 3000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash";
 
 // --- Setup path ---
 const __filename = fileURLToPath(import.meta.url);
@@ -36,82 +31,83 @@ app.use(express.json());
 // ======================================
 
 app.post("/chat", async (req, res) => {
+  const userMessage = req.body?.message;
+
+  if (typeof userMessage !== "string" || !userMessage.trim()) {
+    return res.status(400).json({
+      error: "Tulis pesan dulu ya, nanti Mindy dengerin 🌿",
+    });
+  }
+
+  if (!GEMINI_API_KEY) {
+    console.error("GEMINI_API_KEY is not configured.");
+    return res.status(503).json({
+      error: "Layanan AI belum dikonfigurasi. Periksa GEMINI_API_KEY di file .env.",
+    });
+  }
+
   try {
-    // --- Ambil pesan dari frontend ---
-    const userMessage = req.body.message;
     const systemPrompt = req.body.systemPrompt || "";
 
-    console.log("📩 User Message:", userMessage);
-
-    // ======================================
-    // 🌸 Request ke Gemini API
-    // ======================================
-
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`,
       {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
+          "x-goog-api-key": GEMINI_API_KEY,
         },
-
         body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: systemPrompt }],
+          },
+          generationConfig: {
+            thinkingConfig: {
+              thinkingLevel: "low",
+            },
+          },
           contents: [
             {
               role: "user",
               parts: [
                 {
-                  text: `${systemPrompt}\n\nUser: ${userMessage}`,
+                  text: userMessage.trim(),
                 },
               ],
             },
           ],
         }),
+        signal: AbortSignal.timeout(45_000),
       }
     );
 
-    // --- Ambil response Gemini ---
     const data = await response.json();
 
-    // --- Debug response ---
-    console.log("🌸 Gemini Response:");
-    console.log(JSON.stringify(data, null, 2));
-
-    // ======================================
-    // 🌸 Ambil text AI
-    // ======================================
-
-    let aiText = "Maaf, AI belum bisa merespon 🥺";
-
-    if (
-      data.candidates &&
-      data.candidates.length > 0 &&
-      data.candidates[0].content &&
-      data.candidates[0].content.parts &&
-      data.candidates[0].content.parts.length > 0
-    ) {
-      aiText = data.candidates[0].content.parts[0].text;
+    if (!response.ok) {
+      console.error(`Gemini API returned ${response.status}:`, data.error?.message || "Unknown API error");
+      return res.status(502).json({
+        error: "Mindy belum bisa terhubung ke layanan AI. Coba lagi sebentar ya 🌿",
+      });
     }
 
-    console.log("🤖 AI Reply:", aiText);
+    const aiText = data.candidates?.[0]?.content?.parts
+      ?.map((part) => part.text)
+      .filter((text) => typeof text === "string")
+      .join("")
+      .trim();
 
-    // --- Kirim ke frontend ---
-    res.json({
-      reply: aiText,
-    });
+    if (!aiText) {
+      console.error("Gemini API returned no text candidate:", data.promptFeedback?.blockReason || "No candidate");
+      return res.status(502).json({
+        error: "Mindy belum bisa menjawab pesan itu. Coba ceritakan dengan cara lain ya 🌿",
+      });
+    }
 
+    return res.json({ reply: aiText });
   } catch (error) {
-
-    // ======================================
-    // 🌸 Error Handling
-    // ======================================
-
-    console.error("❌ Server Error:");
-    console.error(error);
-
-    res.status(500).json({
-      reply: "Terjadi kesalahan di server 😢",
+    console.error("Gemini request failed:", error.message);
+    return res.status(502).json({
+      error: "Terjadi gangguan saat menghubungi layanan AI. Coba lagi sebentar ya 🌿",
     });
   }
 });

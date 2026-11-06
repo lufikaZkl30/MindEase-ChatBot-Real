@@ -3,52 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MindEase – Cerita Dunkkk</title>
-
-  <!-- Tailwind & Font -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="icon" href="https://i.pinimg.com/1200x/7c/a1/45/7ca1455a1e76d13694e84cbd85865cdc.jpg" type="image/x-icon">
-
-  <!-- External CSS -->
+  <meta name="theme-color" content="#f6f5f0">
+  <meta name="description" content="Ruang aman untuk bercerita dan menata perasaan bersama Mindy.">
+  <title>MindEase — Ruang Cerita Bersama Mindy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lora:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="flex items-center justify-center min-h-screen  overflow-hidden">
-  <div class="w-full max-w-lg mx-4 bg-transparent rounded-3xl flex flex-col h-[95vh] max-h-[800px] relative">
-    <div class="glassmorphism w-full h-full rounded-3xl shadow-lg flex flex-col">
-      <!-- Header -->
-      <div class="p-5 text-center border-b border-black/10">
-        <h1 class="text-2xl font-bold text-gray-800">MindEase</h1>
-        <p class="text-sm text-gray-600">Ruang cerita bareng Mindy</p>
+<body>
+  <main class="app-shell">
+    <aside class="welcome-panel" aria-labelledby="welcome-title">
+      <a class="brand" href="/" aria-label="MindEase, beranda">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M16 5.5c2.2 0 3.8 2.8 3.8 5.2 1.7-1.6 4.7-2 6.2-.5 1.6 1.6 1 4.5-.6 6.1 2.5 0 5.1 1.7 5.1 3.9s-2.6 3.9-5.1 3.9c1.6 1.7 2.2 4.6.6 6.1-1.5 1.5-4.5 1.1-6.2-.5 0 2.4-1.6 5.2-3.8 5.2s-3.8-2.8-3.8-5.2c-1.7 1.6-4.7 2-6.2.5-1.6-1.5-1-4.4.6-6.1-2.5 0-5.1-1.7-5.1-3.9s2.6-3.9 5.1-3.9c-1.6-1.6-2.2-4.5-.6-6.1 1.5-1.5 4.5-1.1 6.2.5 0-2.4 1.6-5.2 3.8-5.2Z" transform="translate(0 -3)" fill="currentColor"/>
+            <circle cx="16" cy="16" r="3.3" fill="#fffdf8"/>
+          </svg>
+        </span>
+        <span>MindEase</span>
+      </a>
+
+      <div class="welcome-copy">
+        <span class="eyebrow"><span class="eyebrow-dot"></span> RUANG AMANMU</span>
+        <h1 id="welcome-title">Perasaanmu punya <em>tempat</em> di sini.</h1>
+        <p>Pelan-pelan aja. Mindy siap dengerin, tanpa menghakimi dan tanpa buru-buru.</p>
       </div>
 
-      <!-- Chat Box -->
-      <div id="chat-box" class="flex-grow overflow-y-auto"></div>
-      <!-- <script src="/public/js/chat.js"></script> -->
-
-      <!-- Typing Indicator -->
-     <div id="typing-indicator" class="hidden px-4 py-2">
-      <div class="flex space-x-1">
-        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></div>
-        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+      <div class="welcome-art" aria-hidden="true">
+        <div class="art-sun"></div>
+        <div class="art-hill art-hill-back"></div>
+        <div class="art-hill art-hill-front"></div>
+        <span class="art-star art-star-one">✦</span>
+        <span class="art-star art-star-two">✧</span>
+        <span class="art-leaf art-leaf-one"></span>
+        <span class="art-leaf art-leaf-two"></span>
       </div>
-     </div>
 
-      <!-- Input Form -->
-      <form id="chat-form">
-        <input id="user-input" type="text" placeholder="Ketik disini..." />
-        <button type="submit">✨</button>
-      </form>
-    </div>
+      <div class="suggestions">
+        <p class="suggestions-label">Bingung mulai dari mana?</p>
+        <div class="suggestion-list">
+          <button class="suggestion" type="button" data-prompt="Hari ini rasanya berat banget...">Hari ini terasa berat</button>
+          <button class="suggestion" type="button" data-prompt="Aku lagi kepikiran banyak hal. Boleh cerita?">Lagi banyak pikiran</button>
+          <button class="suggestion" type="button" data-prompt="Aku cuma pengin cerita hal kecil yang bikin senang hari ini.">Ada hal menyenangkan</button>
+        </div>
+      </div>
 
-    <div class="fixed bottom-3 right-5 text-gray-500/70 text-xs tracking-wide">
-      crafted with calm souls by <b class="text-gray-700">lufikaZkl30 🌿</b>
-    </div>
-  </div>
-  
-<script src="/js/script.js"></script>
-<script src="/js/chat.js"></script>
+      <p class="gentle-reminder">
+        <span aria-hidden="true">♡</span>
+        Kamu nggak harus punya kata-kata yang sempurna.
+      </p>
+    </aside>
 
+    <section class="chat-panel" aria-label="Percakapan dengan Mindy">
+      <header class="chat-header">
+        <div class="mindy-profile">
+          <div class="mindy-avatar" aria-hidden="true"><span>m</span></div>
+          <div>
+            <h2>Mindy</h2>
+            <p><span class="online-dot"></span> Siap mendengarkan</p>
+          </div>
+        </div>
+        <span class="header-note"><span aria-hidden="true">☁</span> ruang tenang</span>
+      </header>
+
+      <div id="chat-box" class="chat-box" role="log" aria-live="polite" aria-relevant="additions" aria-label="Pesan percakapan"></div>
+
+      <div id="typing-indicator" class="typing-indicator" aria-label="Mindy sedang mengetik" aria-hidden="true">
+        <div class="typing-avatar" aria-hidden="true">m</div>
+        <div class="typing-bubble"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="composer-wrap">
+        <form id="chat-form" class="chat-form">
+          <label class="sr-only" for="user-input">Tulis pesan untuk Mindy</label>
+          <input id="user-input" type="text" placeholder="Ceritain apa yang lagi kamu rasain..." autocomplete="off">
+          <button class="send-button" type="submit" aria-label="Kirim pesan">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="m21 3-7.2 18-3.8-7-7-3.8L21 3Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 14 21 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </form>
+        <p class="composer-hint"><span aria-hidden="true">↵</span> Enter untuk mengirim <span class="hint-divider">·</span> Cerita senyamanmu</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/chat.js"></script>
 </body>
 </html>

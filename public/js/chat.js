@@ -7,6 +7,7 @@ const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
 const chatForm = document.getElementById('chat-form');
 const typingIndicator = document.getElementById('typing-indicator');
+const suggestionButtons = document.querySelectorAll('.suggestion[data-prompt]');
 
 // --- Karakter AI ---
 const systemPrompt = `
@@ -35,26 +36,28 @@ let chatHistory = [];
 // --- Fungsi: Tambah pesan ke layar ---
 function addMessage(text, sender) {
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex w-full';
+  wrapper.className = 'message-row';
 
   const bubble = document.createElement('div');
-  bubble.className = 'max-w-[80%] p-3 rounded-2xl shadow-md break-words leading-relaxed';
+  bubble.className = `message ${sender === 'user' ? 'user-message' : 'bot-message'}`;
 
-  // 🔥 konversi markdown + line breaks biar rapi
-  let formattedText = text
-    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')      // **bold**
-    .replace(/\*(.*?)\*/g, '<i>$1</i>')          // *italic*
-    .replace(/\n\s*\n/g, '<br><br>')             // spasi antar paragraf
-    .replace(/\n/g, '<br>');                     // baris baru
+  const formattedText = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\n\s*\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
 
   bubble.innerHTML = formattedText;
 
   if (sender === 'user') {
     wrapper.classList.add('justify-end');
-    bubble.classList.add('bg-indigo-500', 'text-white', 'rounded-br-none');
   } else {
     wrapper.classList.add('justify-start');
-    bubble.classList.add('bg-white/80', 'text-gray-800', 'border', 'border-gray-200', 'rounded-bl-none');
   }
 
   wrapper.appendChild(bubble);
@@ -64,9 +67,16 @@ function addMessage(text, sender) {
 
 // --- Fungsi: Indikator mengetik ---
 function showTyping(isTyping) {
-  typingIndicator.style.display = isTyping ? 'block' : 'none';
+  typingIndicator.style.display = isTyping ? 'flex' : 'none';
+  typingIndicator.setAttribute('aria-hidden', String(!isTyping));
 }
 
+suggestionButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    userInput.value = button.dataset.prompt;
+    chatForm.requestSubmit();
+  });
+});
 
 // --- Event: Saat user kirim pesan ---
 chatForm.addEventListener('submit', async (e) => {
@@ -89,15 +99,23 @@ chatForm.addEventListener('submit', async (e) => {
   });
 
     const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'Mindy belum bisa menjawab sekarang. Coba lagi ya 🌿');
+    }
+
+    if (typeof data.reply !== 'string' || !data.reply.trim()) {
+      throw new Error('Mindy belum menerima balasan. Coba kirim pesan lagi ya 🌿');
+    }
+
     showTyping(false);
 
     // Tampilkan balasan bot
     addMessage(data.reply, 'bot');
 
   } catch (err) {
-    console.error("Error:", err);
+    console.error("Chat request failed:", err);
     showTyping(false);
-    addMessage("Maaf, ada gangguan kecil. Coba lagi ya 🌿", 'bot');
+    addMessage(err.message || "Maaf, ada gangguan kecil. Coba lagi ya 🌿", 'bot');
   }
 });
 
