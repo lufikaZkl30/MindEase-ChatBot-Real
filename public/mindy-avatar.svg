@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <clipPath id="avatar">
+      <circle cx="64" cy="64" r="64"/>
+    </clipPath>
+    <linearGradient id="background" x1="13" y1="8" x2="112" y2="122" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F3EADD"/>
+      <stop offset="1" stop-color="#DDE9D9"/>
+    </linearGradient>
+    <linearGradient id="hair" x1="40" y1="24" x2="89" y2="89" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#765B4C"/>
+      <stop offset="1" stop-color="#57473D"/>
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#avatar)">
+    <circle cx="64" cy="64" r="64" fill="url(#background)"/>
+    <circle cx="104" cy="25" r="19" fill="#FFF9EC" fill-opacity=".52"/>
+    <path d="M22 128c2-24 18-38 42-38s40 14 42 38H22Z" fill="#77927A"/>
+    <path d="M53 82h22v18H53z" fill="#D99D7F"/>
+    <path d="M36 58c0-25 11-39 29-39 18 0 29 14 29 39v9c0 21-14 34-29 34S36 88 36 67v-9Z" fill="url(#hair)"/>
+    <path d="M44 58c0-16 8-27 21-27s21 11 21 27v11c0 17-9 27-21 27S44 86 44 69V58Z" fill="#E8B99D"/>
+    <path d="M42 59c3-20 11-28 25-28 10 0 17 6 22 17-8-2-14-6-18-11-7 9-17 15-29 17Z" fill="url(#hair)"/>
+    <path d="M43 57c-2 14-4 20-8 22-4-10-4-23 0-35 5-16 16-25 31-25 17 0 29 11 33 29 2 10 1 21-2 29-5-7-7-18-7-27-13-1-24-6-31-14-3 9-9 16-16 21Z" fill="url(#hair)"/>
+    <path d="M52 67c2 2 5 2 7 0M70 67c2 2 5 2 7 0" stroke="#644B40" stroke-linecap="round" stroke-width="2.5"/>
+    <path d="M60 77c3 3 7 3 10 0" stroke="#AD6C65" stroke-linecap="round" stroke-width="2.5"/>
+    <path d="M25 121c4-17 15-27 31-30l8 13 9-13c17 3 27 13 31 30v7H25v-7Z" fill="#77927A"/>
+    <path d="m56 91 8 13 9-13" stroke="#F3EADD" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <path d="M99 48c4-5 11-5 15 0-4 5-11 5-15 0Z" fill="#93A889" fill-opacity=".8"/>
+    <path d="M105 42v12" stroke="#93A889" stroke-linecap="round" stroke-width="1.5"/>
+  </g>
+</svg>
