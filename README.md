@@ -1,211 +1,136 @@
-<h1 align="center">
-  🌸 MindEase — Your Safe Space to Talk
-</h1>
+<h1 align="center">🌿 MindEase — Ruang Cerita Bersama Mindy</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/AI%20Powered-Gemini%202.5%20Flash-8b5cf6?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Node.js-Express-22c55e?style=for-the-badge">
-  <img src="https://img.shields.io/badge/UI-Glassmorphism-f472b6?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Status-Development-38bdf8?style=for-the-badge">
+  <img src="https://img.shields.io/badge/AI-Gemini%20API-718b72?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Backend-Node.js%20%2B%20Express-56815d?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Frontend-HTML%20%2B%20CSS%20%2B%20JavaScript-d49d70?style=for-the-badge">
 </p>
 
 <p align="center">
-  🌿 A gentle AI companion designed to listen, comfort, and create a safe emotional space through conversation.
+  Teman ngobrol AI yang membantu menjawab pertanyaan dengan bahasa yang hangat dan mudah dipahami.
 </p>
 
 ---
 
-# 🌷 About MindEase
+## Tentang MindEase
 
-> *“Tarik napas pelan dulu ya... di sini kamu boleh cerita tanpa takut dihakimi.”* 💭
+MindEase adalah aplikasi chat berbasis web dengan **Mindy**, teman virtual yang bisa menjawab pertanyaan sekaligus menemani pengguna bercerita. Mindy diarahkan untuk menggunakan bahasa Indonesia yang lembut dan sederhana, menjawab inti pertanyaan, serta menanggapi cerita dengan empati.
 
-**MindEase** adalah proyek chatbot AI berbasis **Gemini AI** yang dibuat sebagai ruang aman digital untuk bercerita, menenangkan pikiran, dan menemani pengguna melalui percakapan yang hangat dan penuh empati.
+## Fitur
 
-Berbeda dari chatbot biasa, **Mindy** tidak hanya menjawab pertanyaan —  
-ia hadir seperti teman virtual yang mendengarkan dengan lembut, merespon dengan hangat, dan membuat pengguna merasa diterima 🌸
+- Percakapan dengan Gemini melalui endpoint backend `/chat`.
+- Saran pesan pembuka yang bisa dipilih langsung.
+- Indikator saat Mindy sedang menyiapkan balasan.
+- Antarmuka responsif untuk desktop dan ponsel.
+- Avatar Mindy berbentuk ilustrasi lokal di `public/mindy-avatar.svg`.
+- Validasi pesan dan penanganan error untuk konfigurasi atau respons API yang bermasalah.
 
----
+> Percakapan tidak disimpan ke database. Memuat ulang halaman akan memulai percakapan baru. MindEase bukan pengganti bantuan profesional.
 
-# ✨ Main Features
+## Teknologi
 
-### 💬 Real-Time AI Conversation
-AI merespon pesan pengguna secara langsung dengan gaya bicara yang natural dan emosional.
-
-### 🌸 Empathetic AI Persona
-Mindy dirancang dengan personality prompt khusus agar terasa hangat, santai, suportif, dan nyaman diajak berbicara.
-
-### ☁️ Soft & Calm User Interface
-Menggunakan desain modern bergaya:
-- Glassmorphism
-- Floating clouds animation
-- Soft gradients
-- Cozy pastel aesthetic
-
-### 🧠 Emotion-Oriented Interaction
-Fokus utama chatbot bukan sekadar menjawab, tetapi:
-- menemani
-- mendengarkan
-- memberi kenyamanan emosional
-
-### 🔐 Local & Simple Architecture
-Seluruh komunikasi berjalan melalui server lokal menggunakan Express.js tanpa database eksternal.
-
----
-
-# 🧠 Technologies Used
-
-| Technology | Description |
+| Teknologi | Penggunaan |
 |---|---|
-| HTML5 | Struktur halaman web |
-| Tailwind CSS | Styling modern & responsive UI |
-| JavaScript | Interaksi frontend |
-| Node.js | Runtime backend |
-| Express.js | API & server handling |
-| Gemini API | AI response engine |
-| dotenv | Environment variable management |
+| HTML, CSS, JavaScript | Antarmuka dan interaksi chat |
+| Node.js | Menjalankan aplikasi |
+| Express | Menyajikan file web dan endpoint `/chat` |
+| Gemini API | Menghasilkan balasan Mindy |
+| dotenv | Membaca konfigurasi lokal dari `.env` |
 
----
+Font DM Sans dan Lora dimuat dari Google Fonts. Gaya dan layout aplikasi dibuat di `public/style.css`; Tailwind tidak digunakan oleh halaman saat ini.
 
-# 📁 Project Structure
+## Struktur Proyek
 
-```bash
+```text
 MindEase/
-│
 ├── public/
+│   ├── img/
+│   │   └── pp-Mindy.png
+│   ├── js/
+│   │   ├── chat.js
+│   │   └── script.js
 │   ├── index.html
-│   ├── style.css
-│   └── chat.js
-│
-├── server.js
+│   ├── mindy-avatar.svg
+│   └── style.css
+├── .env                 # Konfigurasi lokal; jangan dibagikan atau di-commit
+├── .gitignore
 ├── package.json
-├── .env
+├── package-lock.json
+├── server.js
 └── README.md
 ```
 
----
+Avatar yang sedang digunakan halaman adalah `public/mindy-avatar.svg`. `public/img/pp-Mindy.png` tersedia di proyek, tetapi belum digunakan oleh halaman chat.
 
-# 🚀 Installation & Setup
+## Menjalankan Secara Lokal
 
-## 1️⃣ Clone Repository
+### 1. Pasang dependensi
 
-```bash
-git clone https://github.com/lufikaZkl30/MindEase-ChatBot-Real
-cd MindEase-ChatBot-Real
-```
-
----
-
-## 2️⃣ Install Dependencies
+Pastikan Node.js dan npm sudah terpasang, lalu jalankan dari folder proyek:
 
 ```bash
 npm install
 ```
 
----
+### 2. Siapkan API key
 
-## 3️⃣ Create `.env` File
-
-Create a `.env` file in the root directory:
+Buat file `.env` di folder utama proyek:
 
 ```env
-GEMINI_API_KEY=YOUR_API_KEY
+GEMINI_API_KEY=isi_api_key_gemini_kamu
 PORT=3000
 ```
 
----
+`GEMINI_MODEL` bersifat opsional. Jika tidak diatur, server menggunakan `gemini-3.5-flash`. Untuk memilih model lain yang tersedia bagi API key kamu, tambahkan:
 
-## 4️⃣ Run the Server
+```env
+GEMINI_MODEL=nama-model
+```
+
+Jangan menaruh API key di file frontend atau mengunggah `.env` ke repository.
+
+### 3. Jalankan server
+
+Mode pengembangan dengan restart otomatis:
 
 ```bash
 npm run dev
 ```
 
-or
+Atau jalankan aplikasi biasa:
 
 ```bash
-node server.js
+npm start
 ```
 
----
+### 4. Buka aplikasi
 
-## 5️⃣ Open in Browser
+Kunjungi [http://localhost:3000](http://localhost:3000), atau gunakan port yang kamu atur pada `PORT`.
 
-```bash
-http://localhost:3000
-```
+## Alur Chat
 
----
+1. `public/js/chat.js` mengirim pesan dan instruksi gaya Mindy ke `POST /chat`.
+2. `server.js` meneruskan permintaan ke Gemini API menggunakan API key dari `.env`.
+3. Server mengembalikan balasan melalui properti `reply`.
+4. Jika permintaan gagal, server mengembalikan error dan antarmuka menampilkannya kepada pengguna.
 
-# 🌼 Meet Mindy
+## Pemecahan Masalah
 
-Mindy adalah karakter AI utama dalam MindEase ✨
+- **API belum dikonfigurasi:** pastikan `.env` berada di folder yang sama dengan `server.js` dan memiliki `GEMINI_API_KEY`.
+- **Perubahan `.env` belum terbaca:** hentikan server lalu jalankan kembali.
+- **Model tidak tersedia:** atur `GEMINI_MODEL` ke model yang tersedia untuk API key dan proyek Google AI kamu.
+- **API mengembalikan error atau kuota habis:** periksa log server dan status kuota di Google AI Studio.
+- **Port sedang digunakan:** ubah nilai `PORT` pada `.env`, lalu buka alamat dengan port baru.
 
-### Personality Traits:
-- Hangat & suportif
-- Santai seperti teman ngobrol
-- Tidak menghakimi
-- Kadang lucu dan relatable 😭
-- Menggunakan emoji secara natural
-- Fokus menemani, bukan menggurui
+## Pengembangan Berikutnya
 
-### Example Response:
-> “Wahh itu pasti capek banget ya 😭  
-> tapi kamu hebat sih masih bisa bertahan sejauh ini 🌷”
+Fitur yang belum tersedia dan dapat dipertimbangkan:
 
----
+- Menyimpan riwayat percakapan.
+- Pengaturan tema gelap dan terang.
+- Fitur suara.
+- Deploy ke layanan hosting.
 
-# 🎨 UI & Design Concept
+## Kreator
 
-MindEase menggunakan konsep visual:
-- Pastel calming colors
-- Soft blur glass effect
-- Floating background animation
-- Cozy late-night conversation vibes 🌙
-
-Tujuannya untuk menciptakan pengalaman yang:
-- nyaman
-- aman
-- tenang
-- emosional
-
----
-
-# 📌 Future Development
-
-- 🌙 Dark / Light mode
-- 🧠 Emotion detection
-- 💾 Chat history
-- 🎤 Voice interaction
-- 📱 Mobile responsive optimization
-- ☁️ Online deployment
-
----
-
-# ⚠️ Important Notes
-
-Gemini API membutuhkan API Key aktif.
-
-Jika quota Gemini tidak tersedia, proyek dapat menggunakan alternatif seperti:
-- OpenRouter
-- DeepSeek API
-- HuggingFace Inference API
-
----
-
-# 🤍 Creator
-
-Developed with care by **Luvi Asakura** 🌸
-
-> *“Sometimes people don't need solutions.  
-> They just need a place where their feelings can exist safely.”*
-
----
-
-# 📜 License
-
-This project is created for:
-- educational purposes
-- portfolio projects
-- personal development
-
-Feel free to modify and improve it while keeping the spirit of MindEase alive 💜
+Dikembangkan dengan perhatian oleh **Luvi Asakura** 🌸
