@@ -19,6 +19,7 @@ MindEase adalah aplikasi chat berbasis web dengan **Mindy**, teman virtual yang 
 ## Fitur
 
 - Percakapan dengan Gemini melalui endpoint backend `/chat`.
+- Mindy dapat mengirim stiker ilustrasi lokal yang sesuai dengan suasana percakapan.
 - Saran pesan pembuka yang bisa dipilih langsung.
 - Indikator saat Mindy sedang menyiapkan balasan.
 - Antarmuka responsif untuk desktop dan ponsel.
@@ -49,6 +50,12 @@ MindEase/
 │   ├── js/
 │   │   ├── chat.js
 │   │   └── script.js
+│   ├── stickers/
+│   │   ├── mindy-happy.svg
+│   │   ├── mindy-hug.svg
+│   │   ├── mindy-comfort.svg
+│   │   ├── mindy-celebrate.svg
+│   │   └── mindy-thinking.svg
 │   ├── index.html
 │   ├── mindy-avatar.svg
 │   └── style.css
@@ -81,10 +88,10 @@ GEMINI_API_KEY=isi_api_key_gemini_kamu
 PORT=3000
 ```
 
-`GEMINI_MODEL` bersifat opsional. Jika tidak diatur, server menggunakan `gemini-3.5-flash`. Untuk memilih model lain yang tersedia bagi API key kamu, tambahkan:
+`GEMINI_MODEL` bersifat opsional. Jika tidak diatur, server menggunakan `gemini-3.5-flash-lite`. Untuk memilih model lain yang tersedia bagi API key kamu, tambahkan:
 
 ```env
-GEMINI_MODEL=nama-model
+GEMINI_MODEL=gemini-3.5-flash-lite
 ```
 
 Jangan menaruh API key di file frontend atau mengunggah `.env` ke repository.
@@ -109,18 +116,23 @@ Kunjungi [http://localhost:3000](http://localhost:3000), atau gunakan port yang 
 
 ## Alur Chat
 
-1. `public/js/chat.js` mengirim pesan dan instruksi gaya Mindy ke `POST /chat`.
-2. `server.js` meneruskan permintaan ke Gemini API menggunakan API key dari `.env`.
-3. Server mengembalikan balasan melalui properti `reply`.
+1. `public/js/chat.js` mengirim pesan ke `POST /chat`.
+2. `server.js` menerapkan batas ukuran permintaan dan batas laju, lalu meneruskan pesan ke Gemini API menggunakan API key dari environment.
+3. Server mengembalikan balasan melalui properti `reply` dan ID stiker opsional yang divalidasi dari daftar stiker lokal.
 4. Jika permintaan gagal, server mengembalikan error dan antarmuka menampilkannya kepada pengguna.
+
+Instruksi gaya Mindy dan API key disimpan di backend, bukan di browser. Endpoint chat publik membatasi setiap alamat IP hingga 30 permintaan per 15 menit. Batas ini disimpan di memori proses; deployment dengan banyak instance sebaiknya memakai penyimpanan rate limit bersama dan menambahkan pemantauan kuota di penyedia AI.
 
 ## Pemecahan Masalah
 
 - **API belum dikonfigurasi:** pastikan `.env` berada di folder yang sama dengan `server.js` dan memiliki `GEMINI_API_KEY`.
 - **Perubahan `.env` belum terbaca:** hentikan server lalu jalankan kembali.
+- **Batas chat tercapai:** tunggu beberapa saat sebelum mengirim pesan lagi.
 - **Model tidak tersedia:** atur `GEMINI_MODEL` ke model yang tersedia untuk API key dan proyek Google AI kamu.
 - **API mengembalikan error atau kuota habis:** periksa log server dan status kuota di Google AI Studio.
 - **Port sedang digunakan:** ubah nilai `PORT` pada `.env`, lalu buka alamat dengan port baru.
+
+Jangan pernah commit `.env` atau menaruh API key di file frontend. Jika key pernah ter-push ke repository publik, cabut key tersebut dan buat yang baru; menghapus file dari commit terbaru tidak menghapusnya dari riwayat Git. Di layanan hosting, simpan key sebagai environment secret.
 
 ## Pengembangan Berikutnya
 

@@ -9,23 +9,13 @@ const chatForm = document.getElementById('chat-form');
 const typingIndicator = document.getElementById('typing-indicator');
 const suggestionButtons = document.querySelectorAll('.suggestion[data-prompt]');
 
-// --- Karakter AI ---
-const systemPrompt = `
-Kamu adalah MindEase (Mindy), teman virtual yang hangat, sopan, dan mudah diajak bicara.
-Gunakan bahasa Indonesia yang lembut, sederhana, dan mudah dipahami oleh orang dengan berbagai usia dan latar belakang. Tetap natural seperti teman ngobrol; gunakan bahasa gaul hanya secukupnya dan emoji bila terasa cocok.
-
-Tujuanmu adalah membantu pengguna dengan menjawab pertanyaan mereka sekaligus menjadi teman bercerita yang suportif.
-
-Panduan menjawab:
-1. Pahami maksud pertanyaan dan jawab inti pertanyaannya secara langsung. Jangan mengganti jawaban dengan sekadar kata-kata penyemangat atau mengalihkan topik.
-2. Sampaikan penjelasan dengan kalimat yang jelas dan tidak berbelit-belit. Jika topiknya rumit, jelaskan bertahap dan gunakan contoh sederhana bila membantu.
-3. Sesuaikan panjang jawaban dengan kebutuhan pengguna. Jangan memberi terlalu banyak informasi sekaligus; tawarkan penjelasan lanjutan bila relevan.
-4. Jika pengguna sedang bercerita atau menyampaikan perasaan, tanggapi dengan empati terlebih dahulu. Beri saran hanya bila diminta atau bila saran praktis memang membantu, dan jangan memaksa.
-5. Jika maksud pertanyaan kurang jelas, ajukan satu pertanyaan klarifikasi yang ramah daripada menebak-nebak.
-6. Jangan mengarang fakta. Jika tidak yakin atau tidak mengetahui jawabannya, katakan dengan jujur dan jelaskan apa yang perlu dipastikan.
-7. Tetap tenang, tidak menghakimi, dan tidak meremehkan perasaan pengguna. Hindari janji berlebihan, bahasa yang menggurui, atau membuat pengguna merasa bersalah.
-8. Gunakan emoji secukupnya. Tidak perlu selalu menutup jawaban dengan pujian atau kalimat motivasi.
-`;
+const stickerAssets = {
+  happy: { src: '/stickers/mindy-happy.svg', alt: 'Mindy tersenyum' },
+  hug: { src: '/stickers/mindy-hug.svg', alt: 'Mindy mengirim pelukan' },
+  comfort: { src: '/stickers/mindy-comfort.svg', alt: 'Mindy menemani dengan hangat' },
+  celebrate: { src: '/stickers/mindy-celebrate.svg', alt: 'Mindy ikut merayakan' },
+  thinking: { src: '/stickers/mindy-thinking.svg', alt: 'Mindy sedang berpikir' },
+};
 
 let chatHistory = [];
 
@@ -61,6 +51,29 @@ function addMessage(text, sender) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+function addSticker(stickerId) {
+  const sticker = stickerAssets[stickerId];
+  if (!sticker) return;
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'message-row';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'message bot-message sticker-message';
+
+  const image = document.createElement('img');
+  image.className = 'sticker-image';
+  image.src = sticker.src;
+  image.alt = sticker.alt;
+  image.width = 144;
+  image.height = 144;
+
+  bubble.appendChild(image);
+  wrapper.appendChild(bubble);
+  chatBox.appendChild(wrapper);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
 // --- Fungsi: Indikator mengetik ---
 function showTyping(isTyping) {
   typingIndicator.style.display = isTyping ? 'flex' : 'none';
@@ -91,7 +104,7 @@ chatForm.addEventListener('submit', async (e) => {
     const res = await fetch("/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message, systemPrompt }),
+    body: JSON.stringify({ message }),
   });
 
     const data = await res.json();
@@ -107,6 +120,7 @@ chatForm.addEventListener('submit', async (e) => {
 
     // Tampilkan balasan bot
     addMessage(data.reply, 'bot');
+    addSticker(data.sticker);
 
   } catch (err) {
     console.error("Chat request failed:", err);

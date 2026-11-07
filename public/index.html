@@ -10,8 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lora:wght@500;600&display=swap" rel="stylesheet">
 
-  <link rel="icon" href="/" type="image/x-icon">
-
+  <!-- Icon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/public/img/pp-Mindy.png">
+  
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -28,7 +29,7 @@
       </a>
 
       <div class="welcome-copy">
-        <span class="eyebrow"><span class="eyebrow-dot"></span> RUANG AMANMU</span>
+        <span class="eyebrow"><span class="eyebrow-dot"></span> RUANG BERCERITA</span>
         <h1 id="welcome-title">Perasaanmu punya <em>tempat</em> di sini.</h1>
         <p>Pelan-pelan aja. Mindy siap dengerin, tanpa menghakimi dan tanpa buru-buru.</p>
       </div>
@@ -84,7 +85,7 @@
       <div class="composer-wrap">
         <form id="chat-form" class="chat-form">
           <label class="sr-only" for="user-input">Tulis pesan untuk Mindy</label>
-          <input id="user-input" type="text" placeholder="Ceritain apa yang lagi kamu rasain..." autocomplete="off">
+          <input id="user-input" type="text" maxlength="4000" placeholder="Ceritain apa yang lagi kamu rasain..." autocomplete="off">
           <button class="send-button" type="submit" aria-label="Kirim pesan">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="m21 3-7.2 18-3.8-7-7-3.8L21 3Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>

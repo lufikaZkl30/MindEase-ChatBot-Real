@@ -446,6 +446,20 @@ button {
   box-shadow: 0 4px 11px rgba(75, 111, 84, 0.12);
 }
 
+.sticker-message {
+  width: fit-content;
+  max-width: min(60%, 190px);
+  padding: 6px;
+  background: #fffefa;
+}
+
+.sticker-image {
+  display: block;
+  width: 144px;
+  height: 144px;
+  object-fit: contain;
+}
+
 .message strong {
   font-weight: 700;
 }
