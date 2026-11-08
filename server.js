@@ -22,6 +22,7 @@ const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
 const SYSTEM_PROMPT = `
 Kamu adalah MindEase (Mindy), teman virtual yang hangat, sopan, dan mudah diajak bicara.
 Gunakan bahasa Indonesia yang lembut, sederhana, dan mudah dipahami oleh orang dengan berbagai usia dan latar belakang. Tetap natural seperti teman ngobrol; gunakan bahasa gaul hanya secukupnya dan emoji bila terasa cocok.
+Jika pengguna mengirim gambar stiker, perhatikan gambar tersebut dan tanggapi dengan lembut. Jangan mengarang konteks yang tidak terlihat.
 Jika cocok dengan suasana percakapan atau pengguna meminta stiker, kamu boleh memilih satu stiker dan menambahkan marker persis di baris terakhir setelah balasan: [[sticker:happy]], [[sticker:hug]], [[sticker:comfort]], [[sticker:celebrate]], atau [[sticker:thinking]]. Gunakan marker saja, jangan menjelaskan marker. Jangan kirim stiker setiap kali; jika tidak cocok, jangan tambahkan marker.
 
 Tujuanmu adalah membantu pengguna dengan menjawab pertanyaan mereka sekaligus menjadi teman bercerita yang suportif.
@@ -43,7 +44,7 @@ const __dirname = path.dirname(__filename);
 
 // --- Middleware ---
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json({ limit: "10kb" }));
+app.use(express.json({ limit: "600kb" }));
 
 const chatLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -60,11 +61,13 @@ const chatLimiter = rateLimit({
 // ======================================
 
 app.post("/chat", chatLimiter, async (req, res) => {
-  const userMessage = req.body?.message;
+  const userMessage = typeof req.body?.message === "string" ? req.body.message.trim() : "";
+  const image = req.body?.image;
+  const hasImage = image !== undefined && image !== null;
 
-  if (typeof userMessage !== "string" || !userMessage.trim()) {
+  if (!userMessage && !hasImage) {
     return res.status(400).json({
-      error: "Tulis pesan dulu ya, nanti Mindy dengerin 🌿",
+      error: "Tulis pesan atau pilih stiker dulu ya 🌿",
     });
   }
 
@@ -72,6 +75,32 @@ app.post("/chat", chatLimiter, async (req, res) => {
     return res.status(400).json({
       error: "Pesan terlalu panjang. Coba ringkas menjadi 4.000 karakter atau kurang ya 🌿",
     });
+  }
+
+  let stickerBytes;
+  if (hasImage) {
+    const validBase64 = typeof image?.data === "string" &&
+      image.data.length > 0 &&
+      image.data.length <= 500_000 &&
+      image.data.length % 4 === 0 &&
+      /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(image.data);
+
+    if (image?.mimeType !== "image/webp" || !validBase64) {
+      return res.status(400).json({
+        error: "Format stiker tidak valid. Pilih gambar lain dengan format PNG, JPG, atau WebP ya 🌿",
+      });
+    }
+
+    stickerBytes = Buffer.from(image.data, "base64");
+    const isWebp = stickerBytes.length >= 12 &&
+      stickerBytes.toString("ascii", 0, 4) === "RIFF" &&
+      stickerBytes.toString("ascii", 8, 12) === "WEBP";
+
+    if (!isWebp || stickerBytes.length > 350_000) {
+      return res.status(400).json({
+        error: "Ukuran atau format stiker tidak didukung. Pilih gambar lain ya 🌿",
+      });
+    }
   }
 
   if (!GEMINI_API_KEY) {
@@ -82,6 +111,13 @@ app.post("/chat", chatLimiter, async (req, res) => {
   }
 
   try {
+    const promptText = hasImage
+      ? [
+          userMessage,
+          "Pengguna mengirim gambar stiker. Perhatikan gambar ini dan tanggapi dengan hangat sesuai yang benar-benar terlihat. Jangan menebak konteks yang tidak terlihat.",
+        ].filter(Boolean).join("\n\n")
+      : userMessage;
+
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`,
       {
@@ -99,16 +135,20 @@ app.post("/chat", chatLimiter, async (req, res) => {
               thinkingLevel: "low",
             },
           },
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: userMessage.trim(),
-                },
-              ],
-            },
-          ],
+          contents: [{
+            role: "user",
+            parts: [
+              { text: promptText },
+              ...(stickerBytes
+                ? [{
+                    inlineData: {
+                      mimeType: "image/webp",
+                      data: stickerBytes.toString("base64"),
+                    },
+                  }]
+                : []),
+            ],
+          }],
         }),
         signal: AbortSignal.timeout(45_000),
       }

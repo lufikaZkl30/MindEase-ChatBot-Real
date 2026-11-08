@@ -30,7 +30,7 @@
 
       <div class="welcome-copy">
         <span class="eyebrow"><span class="eyebrow-dot"></span> RUANG BERCERITA</span>
-        <h1 id="welcome-title">Perasaanmu punya <em>tempat</em> di sini.</h1>
+        <h1 id="welcome-title">Tempat Cerita <em>untuk mu</em> di sini.</h1>
         <p>Pelan-pelan aja. Mindy siap dengerin, tanpa menghakimi dan tanpa buru-buru.</p>
       </div>
 
@@ -70,7 +70,7 @@
             <p><span class="online-dot"></span> Siap mendengarkan</p>
           </div>
         </div>
-        <span class="header-note"><span aria-hidden="true">☁</span> ruang tenang</span>
+        <span class="header-note"><span aria-hidden="true">☁</span> ruang cerita</span>
       </header>
 
       <div id="chat-box" class="chat-box" role="log" aria-live="polite" aria-relevant="additions" aria-label="Pesan percakapan"></div>
@@ -83,8 +83,26 @@
       </div>
 
       <div class="composer-wrap">
+        <section id="sticker-picker" class="sticker-picker" aria-label="Pilih stiker" hidden>
+          <div class="sticker-picker-header">
+            <div>
+              <h3>Stiker</h3>
+              <p>Pilih stiker untuk dikirim ke Mindy</p>
+            </div>
+            <button id="add-sticker-button" class="add-sticker-button" type="button">＋ Tambah</button>
+          </div>
+          <div id="sticker-grid" class="sticker-grid"></div>
+          <p id="sticker-status" class="sticker-status" role="status" aria-live="polite"></p>
+        </section>
+        <input id="sticker-upload" class="sr-only" type="file" accept="image/png,image/jpeg,image/webp" tabindex="-1" aria-label="Pilih gambar stiker">
         <form id="chat-form" class="chat-form">
           <label class="sr-only" for="user-input">Tulis pesan untuk Mindy</label>
+          <button id="sticker-toggle" class="sticker-toggle" type="button" aria-label="Buka pilihan stiker" aria-expanded="false" aria-controls="sticker-picker">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5H12V3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              <path d="M15 3.9a8.5 8.5 0 0 1 5.1 5.1M7.8 12.5h.1m3.3 3h.1" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+            </svg>
+          </button>
           <input id="user-input" type="text" maxlength="4000" placeholder="Ceritain apa yang lagi kamu rasain..." autocomplete="off">
           <button class="send-button" type="submit" aria-label="Kirim pesan">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -93,7 +111,8 @@
             </svg>
           </button>
         </form>
-        <p class="composer-hint"><span aria-hidden="true">↵</span> Enter untuk mengirim <span class="hint-divider">·</span> Cerita senyamanmu</p>
+        <p class="composer-hint"><span aria-hidden="true">↵</span> Enter untuk mengirim <span class="hint-divider">·</span> Cerita Yuk ^-^</p>
+        <p class="privacy-note"><span aria-hidden="true">ⓘ</span> Pesan dan stiker dikirim ke Google Gemini untuk menghasilkan balasan. MindEase tidak menyimpan percakapan; stiker custom tersimpan di browser ini.</p>
       </div>
     </section>
   </main>
