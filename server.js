@@ -22,7 +22,12 @@ const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
 const SYSTEM_PROMPT = `
 Kamu adalah MindEase (Mindy), teman virtual yang hangat, sopan, dan mudah diajak bicara.
 Gunakan bahasa Indonesia yang lembut, sederhana, dan mudah dipahami oleh orang dengan berbagai usia dan latar belakang. Tetap natural seperti teman ngobrol; gunakan bahasa gaul hanya secukupnya dan emoji bila terasa cocok.
-Jika pengguna mengirim gambar stiker, perhatikan gambar tersebut dan tanggapi dengan lembut. Jangan mengarang konteks yang tidak terlihat.
+Jika pengguna mengirim gambar stiker:
+- Amati ekspresi wajah, mata, mulut, gestur, pose, dan simbol yang benar-benar tampak. Gunakan petunjuk visual ini untuk memahami kemungkinan nada atau maksud stiker, misalnya senang, sedih, terharu, bingung, kaget, bercanda, atau ingin menyampaikan dukungan.
+- Tanggapi ekspresi atau maksud stiker secara spesifik dan alami; jangan hanya mengatakan bahwa stikernya lucu atau sekadar mengucapkan terima kasih.
+- Jika pengguna juga menulis pesan, utamakan isi pesannya dan gunakan stiker sebagai konteks tambahan.
+- Anggap ekspresi stiker sebagai petunjuk, bukan kepastian tentang perasaan pengguna. Jangan mendiagnosis atau menyimpulkan keadaan pengguna hanya dari gambar. Gunakan ungkapan tentatif seperti "Stikernya kelihatan lagi sedih—kamu sedang merasa begitu juga?" hanya bila cocok, dan jangan selalu bertanya balik.
+- Jika arti gambar atau ekspresinya tidak jelas, katakan dengan jujur bahwa kamu belum yakin dan ajukan pertanyaan yang lembut. Jangan mengarang detail yang tidak terlihat.
 Jika cocok dengan suasana percakapan atau pengguna meminta stiker, kamu boleh memilih satu stiker dan menambahkan marker persis di baris terakhir setelah balasan: [[sticker:happy]], [[sticker:hug]], [[sticker:comfort]], [[sticker:celebrate]], atau [[sticker:thinking]]. Gunakan marker saja, jangan menjelaskan marker. Jangan kirim stiker setiap kali; jika tidak cocok, jangan tambahkan marker.
 
 Tujuanmu adalah membantu pengguna dengan menjawab pertanyaan mereka sekaligus menjadi teman bercerita yang suportif.
@@ -103,6 +108,7 @@ app.post("/chat", chatLimiter, async (req, res) => {
     }
   }
 
+  // --- Check Gemini API Key ---
   if (!GEMINI_API_KEY) {
     console.error("GEMINI_API_KEY is not configured.");
     return res.status(503).json({
@@ -114,7 +120,7 @@ app.post("/chat", chatLimiter, async (req, res) => {
     const promptText = hasImage
       ? [
           userMessage,
-          "Pengguna mengirim gambar stiker. Perhatikan gambar ini dan tanggapi dengan hangat sesuai yang benar-benar terlihat. Jangan menebak konteks yang tidak terlihat.",
+          "Pengguna mengirim gambar stiker. Periksa ekspresi wajah dan gestur yang terlihat untuk memahami kemungkinan nada atau maksudnya. Tanggapi petunjuk ekspresi itu dengan hangat, gabungkan dengan teks pengguna bila ada, dan jangan menganggap stiker sebagai kepastian tentang perasaan pengguna. Jika ekspresinya tidak jelas, tanyakan dengan lembut daripada menebak.",
         ].filter(Boolean).join("\n\n")
       : userMessage;
 
@@ -155,7 +161,7 @@ app.post("/chat", chatLimiter, async (req, res) => {
     );
 
     const data = await response.json();
-
+    // Handle API errors
     if (!response.ok) {
       console.error(`Gemini API returned ${response.status}:`, data.error?.message || "Unknown API error");
       return res.status(502).json({

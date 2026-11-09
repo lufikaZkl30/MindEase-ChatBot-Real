@@ -130,6 +130,16 @@ function setStickerStatus(message) {
   stickerStatus.textContent = message;
 }
 
+function resizeMessageInput() {
+  userInput.style.height = 'auto';
+  const styles = getComputedStyle(userInput);
+  const maxHeight = Number.parseFloat(styles.maxHeight);
+  const height = Number.isFinite(maxHeight)
+    ? Math.min(userInput.scrollHeight, maxHeight)
+    : userInput.scrollHeight;
+  userInput.style.height = `${height}px`;
+}
+
 function closeStickerPicker() {
   stickerPicker.hidden = true;
   stickerToggle.setAttribute('aria-expanded', 'false');
@@ -209,8 +219,21 @@ function readBlobAsDataUrl(blob) {
 }
 
 async function compressStickerImage(blob) {
-  const image = await createImageBitmap(blob);
+  let objectUrl;
+  let image;
+
   try {
+    try {
+      image = await createImageBitmap(blob);
+    } catch (error) {
+      if (blob.type !== 'image/svg+xml') throw error;
+
+      objectUrl = URL.createObjectURL(blob);
+      image = new Image();
+      image.src = objectUrl;
+      await image.decode();
+    }
+
     if (image.width > 6000 || image.height > 6000 || image.width * image.height > 25_000_000) {
       throw new Error('Ukuran gambar terlalu besar. Pilih gambar yang lebih kecil ya.');
     }
@@ -234,7 +257,8 @@ async function compressStickerImage(blob) {
 
     return readBlobAsDataUrl(compressed);
   } finally {
-    image.close();
+    image?.close?.();
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
   }
 }
 
@@ -321,10 +345,20 @@ function showTyping(isTyping) {
 suggestionButtons.forEach((button) => {
   button.addEventListener('click', () => {
     userInput.value = button.dataset.prompt;
+    resizeMessageInput();
     chatForm.requestSubmit();
   });
 });
 
+userInput.addEventListener('input', resizeMessageInput);
+userInput.addEventListener('keydown', (event) => {
+  if (!event.isComposing && event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+    event.preventDefault();
+    chatForm.requestSubmit();
+  }
+});
+
+resizeMessageInput();
 renderStickerPicker();
 
 stickerToggle.addEventListener('click', () => {
@@ -356,6 +390,7 @@ async function sendChat(message, sticker = null) {
   if (message) addMessage(message, 'user');
   if (sticker) addUserSticker(sticker);
   userInput.value = '';
+  resizeMessageInput();
   isSending = true;
   chatForm.setAttribute('aria-busy', 'true');
   renderStickerPicker();
@@ -403,6 +438,6 @@ chatForm.addEventListener('submit', async (e) => {
 
 // --- Pesan pembuka saat halaman dimuat ---
 window.addEventListener('load', () => {
-  const welcome = "Haiii, selamat datang di cerita dunkkk eak ✨ Tarik napas dulu bentar... gimana hari kamu? Cerita ke aku, yuk 😌";
+  const welcome = "Haiii, selamat datang di cerita Mindy Yawww ✨ Tarik napas dulu bentar... gimana hari kamu? Cerita ke aku, yuk 😌";
   addMessage(welcome, 'bot');
 });
