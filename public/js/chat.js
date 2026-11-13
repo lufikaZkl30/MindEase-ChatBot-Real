@@ -352,7 +352,7 @@ suggestionButtons.forEach((button) => {
 
 userInput.addEventListener('input', resizeMessageInput);
 userInput.addEventListener('keydown', (event) => {
-  if (!event.isComposing && event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+  if (!event.isComposing && event.key === 'Enter' && !event.shiftKey) {
     event.preventDefault();
     chatForm.requestSubmit();
   }
